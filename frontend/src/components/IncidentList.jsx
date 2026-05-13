@@ -18,9 +18,11 @@ export default function IncidentList({ incidents, selectedId, onSelect }) {
         <button
           key={inc.id}
           onClick={() => onSelect(inc)}
-          className={`w-full text-left p-4 rounded-lg border transition-all ${
+          className={`w-full text-left p-4 rounded-lg border transition-all animate-fade-in ${
             selectedId === inc.id
-              ? 'bg-blue-500/10 border-blue-500/50'
+              ? 'bg-blue-500/10 border-blue-500/50 shadow-lg shadow-blue-500/5'
+              : inc.severity === 'critical'
+              ? 'bg-gray-800/50 border-gray-700 hover:border-red-500/40 hover:bg-red-500/5'
               : 'bg-gray-800/50 border-gray-700 hover:border-gray-500'
           }`}
         >

@@ -13,8 +13,10 @@ export default function SplashScreen({ onDone }) {
   }, [onDone])
 
   return (
-    <div className={`fixed inset-0 bg-gray-950 flex flex-col items-center justify-center z-[100] transition-opacity duration-500 ${phase === 3 ? 'opacity-0' : 'opacity-100'}`}>
-      <div className={`flex flex-col items-center gap-4 transition-all duration-700 ${phase >= 1 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+    <div className={`fixed inset-0 bg-gray-950 flex flex-col items-center justify-center z-[100] transition-opacity duration-500 ${phase === 3 ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+      {/* Background grid */}
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(59,130,246,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(59,130,246,0.03)_1px,transparent_1px)] bg-[size:40px_40px]" />
+      <div className={`flex flex-col items-center gap-4 transition-all duration-700 relative z-10 ${phase >= 1 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
         {/* Logo */}
         <div className="relative">
           <div className="w-20 h-20 bg-blue-600 rounded-2xl flex items-center justify-center shadow-2xl shadow-blue-500/30">
