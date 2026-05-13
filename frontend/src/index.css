@@ -11,6 +11,40 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Light theme overrides */
+:root.light {
+  --bg-primary: #f8fafc;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f1f5f9;
+  --border: #e2e8f0;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+}
+
+:root.light body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+:root.light .bg-gray-950 { background-color: #f8fafc !important; }
+:root.light .bg-gray-900 { background-color: #ffffff !important; }
+:root.light .bg-gray-800 { background-color: #f1f5f9 !important; }
+:root.light .bg-gray-700 { background-color: #e2e8f0 !important; }
+:root.light .bg-gray-700\/50 { background-color: rgba(226,232,240,0.5) !important; }
+:root.light .bg-gray-800\/50 { background-color: rgba(241,245,249,0.5) !important; }
+:root.light .border-gray-800 { border-color: #e2e8f0 !important; }
+:root.light .border-gray-700 { border-color: #cbd5e1 !important; }
+:root.light .border-gray-600 { border-color: #94a3b8 !important; }
+:root.light .text-white { color: #0f172a !important; }
+:root.light .text-gray-200 { color: #1e293b !important; }
+:root.light .text-gray-300 { color: #334155 !important; }
+:root.light .text-gray-400 { color: #475569 !important; }
+:root.light .text-gray-500 { color: #64748b !important; }
+:root.light .text-gray-600 { color: #94a3b8 !important; }
+:root.light .bg-gray-900\/50 { background-color: rgba(255,255,255,0.8) !important; }
+:root.light .bg-gray-700\/50 { background-color: rgba(226,232,240,0.5) !important; }
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;

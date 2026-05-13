@@ -6,11 +6,12 @@ import ChatAssistant from './components/ChatAssistant'
 import { SeverityPieChart, StatusBarChart, SourceBarChart } from './components/Charts'
 import Heatmap from './components/Heatmap'
 import SearchFilter from './components/SearchFilter'
+import { useTheme } from './hooks/useTheme'
 import AuditLog from './components/AuditLog'
 import AlertToast from './components/AlertToast'
 import { useAutoRefresh } from './hooks/useAutoRefresh'
 import { useNotifications } from './hooks/useNotifications'
-import { Shield, RefreshCw, MessageSquare, X, LayoutDashboard, BarChart2, Mic, ClipboardList, ArrowLeft, Plus } from 'lucide-react'
+import { Shield, RefreshCw, MessageSquare, X, LayoutDashboard, BarChart2, Mic, ClipboardList, ArrowLeft, Plus, Sun, Moon } from 'lucide-react'
 import VoiceAssistant from './components/VoiceAssistant'
 import CreateIncident from './components/CreateIncident'
 
@@ -26,6 +27,7 @@ export default function App() {
   const [search, setSearch] = useState('')
   const [view, setView] = useState('incidents')
   const [toastAlerts, setToastAlerts] = useState([])
+  const { theme, toggle: toggleTheme } = useTheme()
   // Mobile: 'list' | 'detail' | 'charts' | 'audit' | 'chat'
   const [mobilePanel, setMobilePanel] = useState('list')
 
@@ -123,6 +125,9 @@ export default function App() {
           </div>
           <button onClick={fetchIncidents} className="p-1.5 hover:bg-gray-700 rounded-lg">
             <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
+          </button>
+          <button onClick={toggleTheme} className="p-1.5 hover:bg-gray-700 rounded-lg text-gray-400">
+            {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
           </button>
           <button onClick={() => setShowCreate(true)} className="p-1.5 bg-blue-600 hover:bg-blue-500 rounded-lg">
             <Plus size={14} />
@@ -227,6 +232,9 @@ export default function App() {
           </div>
           <button onClick={fetchIncidents} className="p-2 hover:bg-gray-700 rounded-lg transition-colors">
             <RefreshCw size={15} className={loading ? 'animate-spin' : ''} />
+          </button>
+          <button onClick={toggleTheme} className="p-2 hover:bg-gray-700 rounded-lg transition-colors text-gray-400" title="Toggle theme">
+            {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
           </button>
           <button onClick={() => setShowCreate(true)}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm bg-blue-600 hover:bg-blue-500 transition-colors">
