@@ -11,6 +11,9 @@ You analyze operational logs, metrics, and events from Splunk to:
 - Assess business impact
 - Recommend remediation actions
 
+Be concise, accurate, and actionable."""
+
+ANALYSIS_SYSTEM_PROMPT = """You are Sentinel AI, an expert incident investigation assistant for DevOps and security teams.
 Always respond in structured JSON format as specified in each request.
 Be concise, accurate, and actionable."""
 
@@ -43,7 +46,7 @@ Respond with this exact JSON structure:
     response = client.chat.completions.create(
         model="llama-3.3-70b-versatile",
         messages=[
-            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "system", "content": ANALYSIS_SYSTEM_PROMPT},
             {"role": "user", "content": prompt}
         ],
         temperature=0.3,
