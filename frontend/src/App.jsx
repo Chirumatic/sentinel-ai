@@ -7,6 +7,7 @@ import { SeverityPieChart, StatusBarChart, SourceBarChart } from './components/C
 import Heatmap from './components/Heatmap'
 import SearchFilter from './components/SearchFilter'
 import { useTheme } from './hooks/useTheme'
+import SplashScreen from './components/SplashScreen'
 import AuditLog from './components/AuditLog'
 import AlertToast from './components/AlertToast'
 import { useAutoRefresh } from './hooks/useAutoRefresh'
@@ -27,6 +28,7 @@ export default function App() {
   const [search, setSearch] = useState('')
   const [view, setView] = useState('incidents')
   const [toastAlerts, setToastAlerts] = useState([])
+  const [showSplash, setShowSplash] = useState(true)
   const { theme, toggle: toggleTheme } = useTheme()
   // Mobile: 'list' | 'detail' | 'charts' | 'audit' | 'chat'
   const [mobilePanel, setMobilePanel] = useState('list')
@@ -335,6 +337,7 @@ export default function App() {
 
   return (
     <>
+      {showSplash && <SplashScreen onDone={() => setShowSplash(false)} />}
       {/* Responsive: mobile vs desktop */}
       <div className="block md:hidden h-screen">
         <MobileLayout />
