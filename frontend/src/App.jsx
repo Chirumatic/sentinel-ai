@@ -5,6 +5,7 @@ import IncidentDetail from './components/IncidentDetail'
 import ChatAssistant from './components/ChatAssistant'
 import { SeverityPieChart, StatusBarChart, SourceBarChart } from './components/Charts'
 import Heatmap from './components/Heatmap'
+import SearchFilter from './components/SearchFilter'
 import AuditLog from './components/AuditLog'
 import AlertToast from './components/AlertToast'
 import { useAutoRefresh } from './hooks/useAutoRefresh'
@@ -22,6 +23,7 @@ export default function App() {
   const [showVoice, setShowVoice] = useState(false)
   const [showCreate, setShowCreate] = useState(false)
   const [filter, setFilter] = useState('all')
+  const [search, setSearch] = useState('')
   const [view, setView] = useState('incidents')
   const [toastAlerts, setToastAlerts] = useState([])
   // Mobile: 'list' | 'detail' | 'charts' | 'audit' | 'chat'
@@ -81,9 +83,15 @@ export default function App() {
 
   useEffect(() => { fetchIncidents() }, [])
 
-  const filtered = filter === 'all'
-    ? incidents
-    : incidents.filter(i => i.status === filter || i.severity === filter)
+  const filtered = incidents.filter(i => {
+    const matchesFilter = filter === 'all' || i.status === filter || i.severity === filter
+    const matchesSearch = !search ||
+      i.title.toLowerCase().includes(search.toLowerCase()) ||
+      i.description.toLowerCase().includes(search.toLowerCase()) ||
+      i.id.toLowerCase().includes(search.toLowerCase()) ||
+      i.affected_systems?.some(s => s.toLowerCase().includes(search.toLowerCase()))
+    return matchesFilter && matchesSearch
+  })
 
   const counts = {
     critical: incidents.filter(i => i.severity === 'critical').length,
@@ -144,18 +152,13 @@ export default function App() {
       <div className="flex-1 overflow-y-auto">
         {mobilePanel === 'list' && (
           <div className="p-4">
-            <div className="flex gap-1 mb-4 flex-wrap">
-              {['all', 'active', 'investigating', 'resolved'].map(f => (
-                <button key={f} onClick={() => setFilter(f)}
-                  className={`px-2 py-1 rounded text-xs capitalize ${filter === f ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-400'}`}>
-                  {f}
-                </button>
-              ))}
-            </div>
+            <SearchFilter search={search} onSearch={setSearch} filter={filter} onFilter={setFilter} />
+            <div className="mt-4">
             {loading
               ? <div className="text-center py-8 text-gray-500 text-sm">Loading...</div>
               : <IncidentList incidents={filtered} selectedId={selected?.id} onSelect={handleSelect} />
             }
+            </div>
           </div>
         )}
         {mobilePanel === 'detail' && (
@@ -270,14 +273,7 @@ export default function App() {
         <div className="w-80 shrink-0 border-r border-gray-800 flex flex-col overflow-hidden">
           <div className="p-4 border-b border-gray-800">
             <h2 className="text-sm font-semibold text-gray-300 mb-3">Incidents</h2>
-            <div className="flex gap-1 flex-wrap">
-              {['all', 'active', 'investigating', 'resolved'].map(f => (
-                <button key={f} onClick={() => setFilter(f)}
-                  className={`px-2 py-1 rounded text-xs capitalize transition-colors ${filter === f ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-400 hover:text-white'}`}>
-                  {f}
-                </button>
-              ))}
-            </div>
+            <SearchFilter search={search} onSearch={setSearch} filter={filter} onFilter={setFilter} />
           </div>
           <div className="flex-1 overflow-y-auto p-4">
             {loading
