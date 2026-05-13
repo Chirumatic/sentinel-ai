@@ -4,7 +4,8 @@ import IncidentList from './components/IncidentList'
 import IncidentDetail from './components/IncidentDetail'
 import ChatAssistant from './components/ChatAssistant'
 import { SeverityPieChart, StatusBarChart, SourceBarChart } from './components/Charts'
-import { Shield, RefreshCw, MessageSquare, X, LayoutDashboard, BarChart2, Mic } from 'lucide-react'
+import AuditLog from './components/AuditLog'
+import { Shield, RefreshCw, MessageSquare, X, LayoutDashboard, BarChart2, Mic, ClipboardList } from 'lucide-react'
 import VoiceAssistant from './components/VoiceAssistant'
 
 export default function App() {
@@ -90,6 +91,12 @@ export default function App() {
             >
               <BarChart2 size={13} /> Charts
             </button>
+            <button
+              onClick={() => setView('audit')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs transition-colors ${view === 'audit' ? 'bg-gray-600 text-white' : 'text-gray-400 hover:text-white'}`}
+            >
+              <ClipboardList size={13} /> Audit Log
+            </button>
           </div>
           <button
             onClick={() => setShowVoice(true)}
@@ -162,7 +169,9 @@ export default function App() {
 
         {/* Incident Detail / Charts */}
         <div className="flex-1 overflow-y-auto p-6">
-          {view === 'charts' ? (
+          {view === 'audit' ? (
+            <AuditLog />
+          ) : view === 'charts' ? (
             <div>
               <h2 className="text-base font-semibold text-white mb-4">Incident Analytics</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">

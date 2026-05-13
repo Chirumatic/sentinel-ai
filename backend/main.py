@@ -30,6 +30,14 @@ class ChatRequest(BaseModel):
     message: str
     incident_context: Optional[dict] = None
 
+class ActionDecisionRequest(BaseModel):
+    incident_id: str
+    action: str
+    decision: str  # "approved" | "rejected"
+    approved_by: str
+    reason: Optional[str] = None
+    priority: Optional[str] = None
+
 # --- Health ---
 
 @app.get("/")
@@ -89,6 +97,32 @@ async def get_errors():
     from mock_data import get_recent_errors
     errors = get_recent_errors()
     return {"errors": errors, "count": len(errors)}
+
+# --- Action Approval Routes ---
+
+@app.post("/api/actions/decide")
+async def decide_action(request: ActionDecisionRequest):
+    from actions import record_action
+    entry = record_action(
+        incident_id=request.incident_id,
+        action=request.action,
+        decision=request.decision,
+        approved_by=request.approved_by,
+        reason=request.reason,
+        priority=request.priority,
+    )
+    return {"status": "recorded", "entry": entry}
+
+@app.get("/api/actions/log")
+async def get_action_log():
+    from actions import get_audit_log
+    return {"log": get_audit_log(), "count": len(get_audit_log())}
+
+@app.get("/api/actions/log/{incident_id}")
+async def get_action_log_for_incident(incident_id: str):
+    from actions import get_audit_log
+    entries = [e for e in get_audit_log() if e["incident_id"] == incident_id]
+    return {"log": entries, "count": len(entries)}
 
 if __name__ == "__main__":
     import uvicorn

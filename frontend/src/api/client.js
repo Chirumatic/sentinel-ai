@@ -12,4 +12,9 @@ export const chatWithAI = (message, incident_context = null) =>
   api.post('/api/ai/chat', { message, incident_context })
 export const getErrors = () => api.get('/api/logs/errors')
 
+// Action approval
+export const decideAction = (data) => api.post('/api/actions/decide', data)
+export const getActionLog = () => api.get('/api/actions/log')
+export const getActionLogForIncident = (incident_id) => api.get(`/api/actions/log/${incident_id}`)
+
 export default api

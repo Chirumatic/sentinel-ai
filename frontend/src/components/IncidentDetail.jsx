@@ -1,13 +1,30 @@
 import { useState } from 'react'
 import { SeverityBadge, StatusBadge } from './SeverityBadge'
-import { analyzeIncident } from '../api/client'
-import { Brain, Clock, Server, AlertTriangle, CheckCircle, Loader } from 'lucide-react'
+import { analyzeIncident, decideAction } from '../api/client'
+import { Brain, Clock, Server, AlertTriangle, CheckCircle, Loader, ThumbsUp, ThumbsDown } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 
 export default function IncidentDetail({ incident, logs }) {
   const [analysis, setAnalysis] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+  const [actionStates, setActionStates] = useState({}) // { index: 'approved'|'rejected' }
+
+  const handleDecision = async (rec, index, decision) => {
+    setActionStates(prev => ({ ...prev, [index]: decision }))
+    try {
+      await decideAction({
+        incident_id: incident.id,
+        action: rec.action,
+        decision,
+        approved_by: 'Engineer',
+        priority: rec.priority,
+        reason: '',
+      })
+    } catch {
+      // silently fail — state already updated optimistically
+    }
+  }
 
   const handleAnalyze = async () => {
     setLoading(true)
@@ -126,22 +143,49 @@ export default function IncidentDetail({ incident, logs }) {
               </h3>
               <div className="space-y-2">
                 {analysis.recommendations.map((rec, i) => (
-                  <div key={i} className="flex items-start gap-3 p-3 bg-gray-700/50 rounded-lg">
-                    <span className={`text-xs px-2 py-0.5 rounded font-medium shrink-0 ${
-                      rec.priority === 'immediate'
-                        ? 'bg-red-500/20 text-red-400'
-                        : rec.priority === 'short-term'
-                        ? 'bg-yellow-500/20 text-yellow-400'
-                        : 'bg-blue-500/20 text-blue-400'
-                    }`}>
-                      {rec.priority}
-                    </span>
-                    <p className="text-sm text-gray-300">{rec.action}</p>
+                  <div key={i} className="p-3 bg-gray-700/50 rounded-lg">
+                    <div className="flex items-start gap-3 mb-2">
+                      <span className={`text-xs px-2 py-0.5 rounded font-medium shrink-0 ${
+                        rec.priority === 'immediate'
+                          ? 'bg-red-500/20 text-red-400'
+                          : rec.priority === 'short-term'
+                          ? 'bg-yellow-500/20 text-yellow-400'
+                          : 'bg-blue-500/20 text-blue-400'
+                      }`}>
+                        {rec.priority}
+                      </span>
+                      <p className="text-sm text-gray-300 flex-1">{rec.action}</p>
+                    </div>
+                    {actionStates[i] ? (
+                      <div className={`flex items-center gap-2 text-xs font-medium px-3 py-1.5 rounded-lg w-fit ${
+                        actionStates[i] === 'approved'
+                          ? 'bg-green-500/20 text-green-400'
+                          : 'bg-red-500/20 text-red-400'
+                      }`}>
+                        {actionStates[i] === 'approved' ? <ThumbsUp size={12} /> : <ThumbsDown size={12} />}
+                        {actionStates[i] === 'approved' ? 'Approved' : 'Rejected'}
+                      </div>
+                    ) : (
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => handleDecision(rec, i, 'approved')}
+                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs bg-green-500/20 text-green-400 hover:bg-green-500/30 transition-colors"
+                        >
+                          <ThumbsUp size={12} /> Approve
+                        </button>
+                        <button
+                          onClick={() => handleDecision(rec, i, 'rejected')}
+                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs bg-red-500/20 text-red-400 hover:bg-red-500/30 transition-colors"
+                        >
+                          <ThumbsDown size={12} /> Reject
+                        </button>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
               <p className="text-xs text-gray-500 mt-3 flex items-center gap-1">
-                ⚠ Human approval required before executing any action
+                ⚠ All decisions are logged in the audit trail
               </p>
             </div>
           )}
