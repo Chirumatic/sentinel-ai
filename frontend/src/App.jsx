@@ -9,7 +9,6 @@ import IncidentRateGraph from './components/IncidentRateGraph'
 import SearchFilter from './components/SearchFilter'
 import ActivityFeed from './components/ActivityFeed'
 import DemoWalkthrough from './components/DemoWalkthrough'
-import { useTheme } from './hooks/useTheme'
 import { useSoundAlerts } from './hooks/useSoundAlerts'
 import SplashScreen from './components/SplashScreen'
 import Settings from './components/Settings'
@@ -36,7 +35,6 @@ export default function App() {
   const [view, setView] = useState('incidents')
   const [toastAlerts, setToastAlerts] = useState([])
   const [showSplash, setShowSplash] = useState(true)
-  const { theme, toggle: toggleTheme } = useTheme()
   const { playAlert } = useSoundAlerts()
   // Mobile: 'list' | 'detail' | 'charts' | 'audit' | 'chat'
   const [mobilePanel, setMobilePanel] = useState('list')
@@ -73,6 +71,8 @@ export default function App() {
     sessionStorage.removeItem('sentinel-entered')
     window.location.reload()
   }
+
+  const handleCreated = (newInc) => {
     setIncidents(prev => [newInc, ...prev])
   }
 
