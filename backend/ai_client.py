@@ -1,8 +1,11 @@
 from groq import Groq
-from config import settings
+from dotenv import load_dotenv
+import os
 import json
 
-client = Groq(api_key=settings.groq_api_key)
+load_dotenv()
+
+client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 SYSTEM_PROMPT = """You are Sentinel AI, an expert incident investigation assistant for DevOps and security teams.
 You analyze operational logs, metrics, and events from Splunk to:
