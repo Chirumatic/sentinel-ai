@@ -17,7 +17,7 @@ import AuditLog from './components/AuditLog'
 import AlertToast from './components/AlertToast'
 import { useAutoRefresh } from './hooks/useAutoRefresh'
 import { useNotifications } from './hooks/useNotifications'
-import { Shield, RefreshCw, MessageSquare, X, LayoutDashboard, BarChart2, Mic, ClipboardList, ArrowLeft, Plus, Sun, Moon, Settings as SettingsIcon, Radio, Play } from 'lucide-react'
+import { Shield, RefreshCw, MessageSquare, X, LayoutDashboard, BarChart2, Mic, ClipboardList, ArrowLeft, Plus, Sun, Moon, Settings as SettingsIcon, Radio, Play, LogOut } from 'lucide-react'
 import VoiceAssistant from './components/VoiceAssistant'
 import CreateIncident from './components/CreateIncident'
 
@@ -66,7 +66,13 @@ export default function App() {
 
   useAutoRefresh({ fetchFn, interval: 30000, onNewItems: handleNewIncidents })
 
-  const handleCreated = (newInc) => {
+  const user = JSON.parse(sessionStorage.getItem('sentinel-user') || '{}')
+
+  const handleLogout = () => {
+    sessionStorage.removeItem('sentinel-user')
+    sessionStorage.removeItem('sentinel-entered')
+    window.location.reload()
+  }
     setIncidents(prev => [newInc, ...prev])
   }
 
@@ -314,6 +320,17 @@ export default function App() {
             className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm transition-colors ${showChat ? 'bg-blue-600' : 'bg-gray-700 hover:bg-gray-600'}`}>
             <MessageSquare size={14} /> AI Chat
           </button>
+          {user.name && (
+            <div className="flex items-center gap-2 pl-2 border-l border-gray-700">
+              <div className="w-7 h-7 bg-blue-600 rounded-full flex items-center justify-center text-xs font-bold">
+                {user.name[0]}
+              </div>
+              <span className="text-xs text-gray-400 hidden xl:block">{user.name}</span>
+              <button onClick={handleLogout} className="p-1.5 hover:bg-gray-700 rounded-lg text-gray-500 hover:text-white transition-colors" title="Sign out">
+                <LogOut size={14} />
+              </button>
+            </div>
+          )}
         </div>
       </header>
 
