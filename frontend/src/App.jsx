@@ -4,7 +4,8 @@ import IncidentList from './components/IncidentList'
 import IncidentDetail from './components/IncidentDetail'
 import ChatAssistant from './components/ChatAssistant'
 import { SeverityPieChart, StatusBarChart, SourceBarChart } from './components/Charts'
-import { Shield, RefreshCw, MessageSquare, X, LayoutDashboard, BarChart2 } from 'lucide-react'
+import { Shield, RefreshCw, MessageSquare, X, LayoutDashboard, BarChart2, Mic } from 'lucide-react'
+import VoiceAssistant from './components/VoiceAssistant'
 
 export default function App() {
   const [incidents, setIncidents] = useState([])
@@ -12,6 +13,7 @@ export default function App() {
   const [selectedLogs, setSelectedLogs] = useState([])
   const [loading, setLoading] = useState(true)
   const [showChat, setShowChat] = useState(false)
+  const [showVoice, setShowVoice] = useState(false)
   const [filter, setFilter] = useState('all')
   const [view, setView] = useState('incidents') // 'incidents' | 'charts'
 
@@ -89,6 +91,13 @@ export default function App() {
               <BarChart2 size={13} /> Charts
             </button>
           </div>
+          <button
+            onClick={() => setShowVoice(true)}
+            className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm bg-gray-700 hover:bg-gray-600 transition-colors"
+          >
+            <Mic size={14} />
+            Voice
+          </button>
           <button
             onClick={() => setShowChat(!showChat)}
             className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm transition-colors ${
@@ -190,6 +199,14 @@ export default function App() {
           </div>
         )}
       </div>
+
+      {/* Voice Assistant Modal */}
+      {showVoice && (
+        <VoiceAssistant
+          incidentContext={selected}
+          onClose={() => setShowVoice(false)}
+        />
+      )}
     </div>
   )
 }
