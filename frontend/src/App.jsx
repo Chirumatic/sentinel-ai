@@ -9,6 +9,7 @@ import SearchFilter from './components/SearchFilter'
 import ActivityFeed from './components/ActivityFeed'
 import DemoWalkthrough from './components/DemoWalkthrough'
 import { useTheme } from './hooks/useTheme'
+import { useSoundAlerts } from './hooks/useSoundAlerts'
 import SplashScreen from './components/SplashScreen'
 import Settings from './components/Settings'
 import AuditLog from './components/AuditLog'
@@ -35,6 +36,7 @@ export default function App() {
   const [toastAlerts, setToastAlerts] = useState([])
   const [showSplash, setShowSplash] = useState(true)
   const { theme, toggle: toggleTheme } = useTheme()
+  const { playAlert } = useSoundAlerts()
   // Mobile: 'list' | 'detail' | 'charts' | 'audit' | 'chat'
   const [mobilePanel, setMobilePanel] = useState('list')
 
@@ -52,6 +54,7 @@ export default function App() {
       if (!truly_new.length) return prev
       truly_new.forEach(inc => {
         notify(inc.title, inc.description, inc.severity)
+        playAlert(inc.severity)
         const toastId = inc.id + Date.now()
         setToastAlerts(t => [...t, { ...inc, _toastId: toastId }])
         setTimeout(() => setToastAlerts(t => t.filter(a => a._toastId !== toastId)), 6000)
