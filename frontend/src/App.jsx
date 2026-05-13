@@ -1,10 +1,13 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { getIncidents, getIncident } from './api/client'
 import IncidentList from './components/IncidentList'
 import IncidentDetail from './components/IncidentDetail'
 import ChatAssistant from './components/ChatAssistant'
 import { SeverityPieChart, StatusBarChart, SourceBarChart } from './components/Charts'
 import AuditLog from './components/AuditLog'
+import AlertToast from './components/AlertToast'
+import { useAutoRefresh } from './hooks/useAutoRefresh'
+import { useNotifications } from './hooks/useNotifications'
 import { Shield, RefreshCw, MessageSquare, X, LayoutDashboard, BarChart2, Mic, ClipboardList } from 'lucide-react'
 import VoiceAssistant from './components/VoiceAssistant'
 
@@ -16,7 +19,34 @@ export default function App() {
   const [showChat, setShowChat] = useState(false)
   const [showVoice, setShowVoice] = useState(false)
   const [filter, setFilter] = useState('all')
-  const [view, setView] = useState('incidents') // 'incidents' | 'charts'
+  const [view, setView] = useState('incidents')
+  const [toastAlerts, setToastAlerts] = useState([])
+
+  const { notify } = useNotifications()
+
+  const fetchFn = useCallback(async () => {
+    const res = await getIncidents()
+    return res.data.incidents
+  }, [])
+
+  const handleNewIncidents = useCallback((newItems) => {
+    setIncidents(prev => {
+      const existingIds = new Set(prev.map(i => i.id))
+      const truly_new = newItems.filter(i => !existingIds.has(i.id))
+      if (!truly_new.length) return prev
+      truly_new.forEach(inc => {
+        // Browser notification
+        notify(inc.title, inc.description, inc.severity)
+        // In-app toast
+        setToastAlerts(t => [...t, { ...inc, _toastId: inc.id + Date.now() }])
+        // Auto-dismiss after 6s
+        setTimeout(() => setToastAlerts(t => t.filter(a => a._toastId !== inc.id + Date.now())), 6000)
+      })
+      return [...truly_new, ...prev]
+    })
+  }, [notify])
+
+  useAutoRefresh({ fetchFn, interval: 30000, onNewItems: handleNewIncidents })
 
   const fetchIncidents = async () => {
     setLoading(true)
@@ -216,6 +246,12 @@ export default function App() {
           onClose={() => setShowVoice(false)}
         />
       )}
+
+      {/* Alert Toasts */}
+      <AlertToast
+        alerts={toastAlerts}
+        onDismiss={(id) => setToastAlerts(t => t.filter(a => a._toastId !== id))}
+      />
     </div>
   )
 }

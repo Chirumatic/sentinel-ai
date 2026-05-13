@@ -50,6 +50,24 @@ async def health_check():
 
 # --- Incident Routes ---
 
+@app.get("/api/incidents/simulate")
+async def simulate_incident():
+    """Add a new simulated incident for demo/testing purposes."""
+    from mock_data import INCIDENTS, generate_timestamp
+    import random
+    new_inc = {
+        "id": f"INC-{len(INCIDENTS) + 1:03d}",
+        "title": "Kubernetes Pod CrashLoopBackOff Detected",
+        "description": "Multiple pods in the payments namespace are crash-looping after config update",
+        "severity": "critical",
+        "status": "active",
+        "source": "infrastructure",
+        "affected_systems": ["k8s-payments", "payment-service", "api-gateway"],
+        "timestamp": generate_timestamp(0),
+    }
+    INCIDENTS.append(new_inc)
+    return {"status": "simulated", "incident": new_inc}
+
 @app.get("/api/incidents")
 async def get_incidents():
     from mock_data import get_all_incidents
