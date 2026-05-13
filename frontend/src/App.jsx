@@ -229,8 +229,14 @@ export default function App() {
 
   // ── DESKTOP LAYOUT ─────────────────────────────────────────
   const DesktopLayout = () => (
-    <div className="min-h-screen bg-gray-950 text-white flex flex-col">
-      <header className="bg-gray-900 border-b border-gray-800 px-6 py-3 flex items-center justify-between shrink-0">
+    <div className="min-h-screen bg-gray-950 text-white flex flex-col relative">
+      {/* Dashboard background */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <div className="absolute top-0 right-0 w-[500px] h-[400px] bg-blue-600/5 rounded-full blur-[100px]" />
+        <div className="absolute bottom-0 left-0 w-[400px] h-[300px] bg-purple-600/4 rounded-full blur-[80px]" />
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(59,130,246,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(59,130,246,0.02)_1px,transparent_1px)] bg-[size:40px_40px]" />
+      </div>
+      <header className="bg-gray-900/80 backdrop-blur-sm border-b border-gray-800 px-6 py-3 flex items-center justify-between shrink-0 relative z-10">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
             <Shield size={18} />
@@ -287,7 +293,7 @@ export default function App() {
         </div>
       </header>
 
-      <div className="bg-gray-900/50 border-b border-gray-800 px-6 py-2 flex gap-6">
+      <div className="bg-gray-900/50 backdrop-blur-sm border-b border-gray-800 px-6 py-2 flex gap-6 relative z-10">
         {[
           { label: 'Critical', value: counts.critical, color: 'text-red-400' },
           { label: 'Active', value: counts.active, color: 'text-orange-400' },
@@ -301,7 +307,7 @@ export default function App() {
         ))}
       </div>
 
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 overflow-hidden relative z-10">
         <div className="w-80 shrink-0 border-r border-gray-800 flex flex-col overflow-hidden">
           <div className="p-4 border-b border-gray-800">
             <h2 className="text-sm font-semibold text-gray-300 mb-3">Incidents</h2>
