@@ -6,6 +6,7 @@ import ChatAssistant from './components/ChatAssistant'
 import { SeverityPieChart, StatusBarChart, SourceBarChart } from './components/Charts'
 import Heatmap from './components/Heatmap'
 import SearchFilter from './components/SearchFilter'
+import ActivityFeed from './components/ActivityFeed'
 import { useTheme } from './hooks/useTheme'
 import SplashScreen from './components/SplashScreen'
 import Settings from './components/Settings'
@@ -13,7 +14,7 @@ import AuditLog from './components/AuditLog'
 import AlertToast from './components/AlertToast'
 import { useAutoRefresh } from './hooks/useAutoRefresh'
 import { useNotifications } from './hooks/useNotifications'
-import { Shield, RefreshCw, MessageSquare, X, LayoutDashboard, BarChart2, Mic, ClipboardList, ArrowLeft, Plus, Sun, Moon, Settings as SettingsIcon } from 'lucide-react'
+import { Shield, RefreshCw, MessageSquare, X, LayoutDashboard, BarChart2, Mic, ClipboardList, ArrowLeft, Plus, Sun, Moon, Settings as SettingsIcon, Radio } from 'lucide-react'
 import VoiceAssistant from './components/VoiceAssistant'
 import CreateIncident from './components/CreateIncident'
 
@@ -23,6 +24,7 @@ export default function App() {
   const [selectedLogs, setSelectedLogs] = useState([])
   const [loading, setLoading] = useState(true)
   const [showChat, setShowChat] = useState(false)
+  const [showActivity, setShowActivity] = useState(false)
   const [showVoice, setShowVoice] = useState(false)
   const [showCreate, setShowCreate] = useState(false)
   const [filter, setFilter] = useState('all')
@@ -188,6 +190,9 @@ export default function App() {
         {mobilePanel === 'audit' && (
           <div className="p-4"><AuditLog /></div>
         )}
+        {mobilePanel === 'activity' && (
+          <div className="h-full"><ActivityFeed /></div>
+        )}
         {mobilePanel === 'settings' && (
           <div className="p-4"><Settings /></div>
         )}
@@ -204,6 +209,7 @@ export default function App() {
           { id: 'list', icon: <LayoutDashboard size={18} />, label: 'Incidents' },
           { id: 'charts', icon: <BarChart2 size={18} />, label: 'Charts' },
           { id: 'audit', icon: <ClipboardList size={18} />, label: 'Audit' },
+          { id: 'activity', icon: <Radio size={18} />, label: 'Activity' },
           { id: 'chat', icon: <MessageSquare size={18} />, label: 'Chat' },
           { id: 'settings', icon: <SettingsIcon size={18} />, label: 'Settings' },
         ].map(tab => (
@@ -263,6 +269,10 @@ export default function App() {
           <button onClick={() => setShowVoice(true)}
             className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm bg-gray-700 hover:bg-gray-600 transition-colors">
             <Mic size={14} /> Voice
+          </button>
+          <button onClick={() => setShowActivity(!showActivity)}
+            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm transition-colors ${showActivity ? 'bg-green-600' : 'bg-gray-700 hover:bg-gray-600'}`}>
+            <Radio size={14} /> Activity
           </button>
           <button onClick={() => setShowChat(!showChat)}
             className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm transition-colors ${showChat ? 'bg-blue-600' : 'bg-gray-700 hover:bg-gray-600'}`}>
@@ -324,6 +334,12 @@ export default function App() {
             </div>
           )}
         </div>
+
+        {showActivity && (
+          <div className="w-72 shrink-0 border-l border-gray-800 flex flex-col overflow-hidden">
+            <ActivityFeed />
+          </div>
+        )}
 
         {showChat && (
           <div className="w-80 shrink-0 border-l border-gray-800 flex flex-col overflow-hidden">
