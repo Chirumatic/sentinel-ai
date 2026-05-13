@@ -4,6 +4,7 @@ import IncidentList from './components/IncidentList'
 import IncidentDetail from './components/IncidentDetail'
 import ChatAssistant from './components/ChatAssistant'
 import { SeverityPieChart, StatusBarChart, SourceBarChart } from './components/Charts'
+import Heatmap from './components/Heatmap'
 import AuditLog from './components/AuditLog'
 import AlertToast from './components/AlertToast'
 import { useAutoRefresh } from './hooks/useAutoRefresh'
@@ -170,6 +171,7 @@ export default function App() {
             <SeverityPieChart incidents={incidents} />
             <StatusBarChart incidents={incidents} />
             <SourceBarChart incidents={incidents} />
+            <Heatmap incidents={incidents} />
           </div>
         )}
         {mobilePanel === 'audit' && (
@@ -290,11 +292,12 @@ export default function App() {
            view === 'charts' ? (
             <div>
               <h2 className="text-base font-semibold text-white mb-4">Incident Analytics</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 mb-4">
                 <SeverityPieChart incidents={incidents} />
                 <StatusBarChart incidents={incidents} />
                 <SourceBarChart incidents={incidents} />
               </div>
+              <Heatmap incidents={incidents} />
             </div>
           ) : selected ? (
             <IncidentDetail incident={selected} logs={selectedLogs} />
