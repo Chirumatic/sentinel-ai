@@ -111,9 +111,17 @@ export default function App() {
 
   // ── MOBILE LAYOUT ──────────────────────────────────────────
   const MobileLayout = () => (
-    <div className="flex flex-col h-screen bg-gray-950 text-white">
+    <div className="flex flex-col h-screen text-white relative overflow-hidden"
+      style={{ background: 'radial-gradient(ellipse at 30% 20%, #0f1f3d 0%, #050d1a 60%, #000000 100%)' }}
+    >
+      {/* Mobile background */}
+      <div className="absolute inset-0 pointer-events-none z-0">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/10 rounded-full blur-[60px]" />
+        <div className="absolute bottom-20 left-0 w-48 h-48 bg-purple-600/8 rounded-full blur-[50px]" />
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(59,130,246,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(59,130,246,0.03)_1px,transparent_1px)] bg-[size:30px_30px]" />
+      </div>
       {/* Mobile Header */}
-      <header className="bg-gray-900 border-b border-gray-800 px-4 py-3 flex items-center justify-between shrink-0">
+      <header className="bg-gray-900/70 backdrop-blur-sm border-b border-gray-800 px-4 py-3 flex items-center justify-between shrink-0 relative z-10">
         <div className="flex items-center gap-2">
           {mobilePanel === 'detail' && (
             <button onClick={() => setMobilePanel('list')} className="p-1 mr-1 text-gray-400">
@@ -146,7 +154,7 @@ export default function App() {
       </header>
 
       {/* Stats */}
-      <div className="bg-gray-900/50 border-b border-gray-800 px-4 py-2 flex gap-4">
+      <div className="bg-gray-900/50 backdrop-blur-sm border-b border-gray-800 px-4 py-2 flex gap-4 relative z-10">
         {[
           { label: 'Critical', value: counts.critical, color: 'text-red-400' },
           { label: 'Active', value: counts.active, color: 'text-orange-400' },
@@ -161,7 +169,7 @@ export default function App() {
       </div>
 
       {/* Panel Content */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto relative z-10">
         {mobilePanel === 'list' && (
           <div className="p-4">
             <SearchFilter search={search} onSearch={setSearch} filter={filter} onFilter={setFilter} />
@@ -206,7 +214,7 @@ export default function App() {
       </div>
 
       {/* Mobile Bottom Nav */}
-      <nav className="bg-gray-900 border-t border-gray-800 flex shrink-0">
+      <nav className="bg-gray-900/80 backdrop-blur-sm border-t border-gray-800 flex shrink-0 relative z-10">
         {[
           { id: 'list', icon: <LayoutDashboard size={18} />, label: 'Incidents' },
           { id: 'charts', icon: <BarChart2 size={18} />, label: 'Charts' },
