@@ -5,6 +5,7 @@ import IncidentDetail from './components/IncidentDetail'
 import ChatAssistant from './components/ChatAssistant'
 import { SeverityPieChart, StatusBarChart, SourceBarChart } from './components/Charts'
 import Heatmap from './components/Heatmap'
+import IncidentRateGraph from './components/IncidentRateGraph'
 import SearchFilter from './components/SearchFilter'
 import ActivityFeed from './components/ActivityFeed'
 import DemoWalkthrough from './components/DemoWalkthrough'
@@ -194,6 +195,7 @@ export default function App() {
         )}
         {mobilePanel === 'charts' && (
           <div className="p-4 space-y-4">
+            <IncidentRateGraph incidents={incidents} />
             <SeverityPieChart incidents={incidents} />
             <StatusBarChart incidents={incidents} />
             <SourceBarChart incidents={incidents} />
@@ -354,7 +356,10 @@ export default function App() {
                 <StatusBarChart incidents={incidents} />
                 <SourceBarChart incidents={incidents} />
               </div>
-              <Heatmap incidents={incidents} />
+              <IncidentRateGraph incidents={incidents} />
+              <div className="mt-4">
+                <Heatmap incidents={incidents} />
+              </div>
             </div>
           ) : selected ? (
             <IncidentDetail incident={selected} logs={selectedLogs} />
