@@ -30,6 +30,13 @@ class ChatRequest(BaseModel):
     message: str
     incident_context: Optional[dict] = None
 
+class CreateIncidentRequest(BaseModel):
+    title: str
+    description: str
+    severity: str = "high"
+    source: str = "infrastructure"
+    affected_systems: list[str] = []
+
 class ActionDecisionRequest(BaseModel):
     incident_id: str
     action: str
@@ -54,7 +61,6 @@ async def health_check():
 async def simulate_incident():
     """Add a new simulated incident for demo/testing purposes."""
     from mock_data import INCIDENTS, generate_timestamp
-    import random
     new_inc = {
         "id": f"INC-{len(INCIDENTS) + 1:03d}",
         "title": "Kubernetes Pod CrashLoopBackOff Detected",
@@ -67,6 +73,23 @@ async def simulate_incident():
     }
     INCIDENTS.append(new_inc)
     return {"status": "simulated", "incident": new_inc}
+
+@app.post("/api/incidents/create")
+async def create_incident(request: CreateIncidentRequest):
+    """Create a new incident manually from the dashboard."""
+    from mock_data import INCIDENTS, generate_timestamp
+    new_inc = {
+        "id": f"INC-{len(INCIDENTS) + 1:03d}",
+        "title": request.title,
+        "description": request.description,
+        "severity": request.severity,
+        "status": "active",
+        "source": request.source,
+        "affected_systems": request.affected_systems,
+        "timestamp": generate_timestamp(0),
+    }
+    INCIDENTS.append(new_inc)
+    return {"status": "created", "incident": new_inc}
 
 @app.get("/api/incidents")
 async def get_incidents():

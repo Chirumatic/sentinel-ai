@@ -8,8 +8,9 @@ import AuditLog from './components/AuditLog'
 import AlertToast from './components/AlertToast'
 import { useAutoRefresh } from './hooks/useAutoRefresh'
 import { useNotifications } from './hooks/useNotifications'
-import { Shield, RefreshCw, MessageSquare, X, LayoutDashboard, BarChart2, Mic, ClipboardList, ArrowLeft } from 'lucide-react'
+import { Shield, RefreshCw, MessageSquare, X, LayoutDashboard, BarChart2, Mic, ClipboardList, ArrowLeft, Plus } from 'lucide-react'
 import VoiceAssistant from './components/VoiceAssistant'
+import CreateIncident from './components/CreateIncident'
 
 export default function App() {
   const [incidents, setIncidents] = useState([])
@@ -18,6 +19,7 @@ export default function App() {
   const [loading, setLoading] = useState(true)
   const [showChat, setShowChat] = useState(false)
   const [showVoice, setShowVoice] = useState(false)
+  const [showCreate, setShowCreate] = useState(false)
   const [filter, setFilter] = useState('all')
   const [view, setView] = useState('incidents')
   const [toastAlerts, setToastAlerts] = useState([])
@@ -47,6 +49,10 @@ export default function App() {
   }, [notify])
 
   useAutoRefresh({ fetchFn, interval: 30000, onNewItems: handleNewIncidents })
+
+  const handleCreated = (newInc) => {
+    setIncidents(prev => [newInc, ...prev])
+  }
 
   const fetchIncidents = async () => {
     setLoading(true)
@@ -108,6 +114,9 @@ export default function App() {
           </div>
           <button onClick={fetchIncidents} className="p-1.5 hover:bg-gray-700 rounded-lg">
             <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
+          </button>
+          <button onClick={() => setShowCreate(true)} className="p-1.5 bg-blue-600 hover:bg-blue-500 rounded-lg">
+            <Plus size={14} />
           </button>
           <button onClick={() => setShowVoice(true)} className="p-1.5 bg-gray-700 rounded-lg">
             <Mic size={14} />
@@ -213,6 +222,10 @@ export default function App() {
           </div>
           <button onClick={fetchIncidents} className="p-2 hover:bg-gray-700 rounded-lg transition-colors">
             <RefreshCw size={15} className={loading ? 'animate-spin' : ''} />
+          </button>
+          <button onClick={() => setShowCreate(true)}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm bg-blue-600 hover:bg-blue-500 transition-colors">
+            <Plus size={14} /> New Incident
           </button>
           <div className="flex bg-gray-800 rounded-lg p-0.5">
             {[
@@ -325,6 +338,10 @@ export default function App() {
 
       {showVoice && (
         <VoiceAssistant incidentContext={selected} onClose={() => setShowVoice(false)} />
+      )}
+
+      {showCreate && (
+        <CreateIncident onCreated={handleCreated} onClose={() => setShowCreate(false)} />
       )}
 
       <AlertToast
