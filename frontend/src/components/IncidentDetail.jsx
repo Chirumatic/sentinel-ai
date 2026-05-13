@@ -3,6 +3,7 @@ import { SeverityBadge, StatusBadge } from './SeverityBadge'
 import { analyzeIncident, decideAction } from '../api/client'
 import { Brain, Clock, Server, AlertTriangle, CheckCircle, Loader, ThumbsUp, ThumbsDown } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
+import ExportReport from './ExportReport'
 
 export default function IncidentDetail({ incident, logs }) {
   const [analysis, setAnalysis] = useState(null)
@@ -50,15 +51,18 @@ export default function IncidentDetail({ incident, logs }) {
         </div>
         <h2 className="text-lg font-semibold text-white">{incident.title}</h2>
         <p className="text-sm text-gray-400 mt-1">{incident.description}</p>
-        <div className="flex items-center gap-4 mt-3 text-xs text-gray-500">
-          <span className="flex items-center gap-1">
+        <div className="flex items-center gap-3 mt-3 flex-wrap">
+          <span className="flex items-center gap-1 text-xs text-gray-500">
             <Clock size={12} />
             {formatDistanceToNow(new Date(incident.timestamp), { addSuffix: true })}
           </span>
-          <span className="flex items-center gap-1">
+          <span className="flex items-center gap-1 text-xs text-gray-500">
             <Server size={12} />
             {incident.affected_systems?.join(', ')}
           </span>
+          <div className="ml-auto">
+            <ExportReport incident={incident} logs={logs} analysis={analysis} />
+          </div>
         </div>
       </div>
 
