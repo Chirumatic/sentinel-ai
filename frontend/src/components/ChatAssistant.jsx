@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { chatWithAI } from '../api/client'
 import { Send, Bot, User, Loader } from 'lucide-react'
+import ReactMarkdown from 'react-markdown'
 
 export default function ChatAssistant({ incidentContext }) {
   const [messages, setMessages] = useState([
@@ -52,7 +53,21 @@ export default function ChatAssistant({ incidentContext }) {
                 ? 'bg-gray-700 text-gray-200'
                 : 'bg-blue-600 text-white'
             }`}>
-              {msg.content}
+              {msg.role === 'assistant' ? (
+                <ReactMarkdown
+                  components={{
+                    ul: ({children}) => <ul className="list-disc list-inside space-y-1 mt-1">{children}</ul>,
+                    ol: ({children}) => <ol className="list-decimal list-inside space-y-1 mt-1">{children}</ol>,
+                    li: ({children}) => <li className="text-gray-200">{children}</li>,
+                    strong: ({children}) => <strong className="text-white font-semibold">{children}</strong>,
+                    p: ({children}) => <p className="mb-1 last:mb-0">{children}</p>,
+                  }}
+                >
+                  {msg.content}
+                </ReactMarkdown>
+              ) : (
+                msg.content
+              )}
             </div>
           </div>
         ))}
