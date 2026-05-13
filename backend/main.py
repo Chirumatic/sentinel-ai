@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from dotenv import load_dotenv
 from typing import Optional
 import os
+import asyncio
 
 load_dotenv()
 
@@ -15,11 +16,18 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=os.getenv("CORS_ORIGINS", "http://localhost:3000").split(","),
+    allow_origins=os.getenv("CORS_ORIGINS", "*").split(","),
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.on_event("startup")
+async def start_simulator():
+    from mock_data import INCIDENTS
+    from incident_simulator import run_simulator
+    interval = int(os.getenv("SIMULATOR_INTERVAL", 45))
+    asyncio.create_task(run_simulator(INCIDENTS, interval_seconds=interval))
 
 # --- Request Models ---
 
