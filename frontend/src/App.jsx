@@ -7,6 +7,7 @@ import { SeverityPieChart, StatusBarChart, SourceBarChart } from './components/C
 import Heatmap from './components/Heatmap'
 import SearchFilter from './components/SearchFilter'
 import ActivityFeed from './components/ActivityFeed'
+import DemoWalkthrough from './components/DemoWalkthrough'
 import { useTheme } from './hooks/useTheme'
 import SplashScreen from './components/SplashScreen'
 import Settings from './components/Settings'
@@ -14,7 +15,7 @@ import AuditLog from './components/AuditLog'
 import AlertToast from './components/AlertToast'
 import { useAutoRefresh } from './hooks/useAutoRefresh'
 import { useNotifications } from './hooks/useNotifications'
-import { Shield, RefreshCw, MessageSquare, X, LayoutDashboard, BarChart2, Mic, ClipboardList, ArrowLeft, Plus, Sun, Moon, Settings as SettingsIcon, Radio } from 'lucide-react'
+import { Shield, RefreshCw, MessageSquare, X, LayoutDashboard, BarChart2, Mic, ClipboardList, ArrowLeft, Plus, Sun, Moon, Settings as SettingsIcon, Radio, Play } from 'lucide-react'
 import VoiceAssistant from './components/VoiceAssistant'
 import CreateIncident from './components/CreateIncident'
 
@@ -25,6 +26,7 @@ export default function App() {
   const [loading, setLoading] = useState(true)
   const [showChat, setShowChat] = useState(false)
   const [showActivity, setShowActivity] = useState(false)
+  const [showWalkthrough, setShowWalkthrough] = useState(false)
   const [showVoice, setShowVoice] = useState(false)
   const [showCreate, setShowCreate] = useState(false)
   const [filter, setFilter] = useState('all')
@@ -270,6 +272,10 @@ export default function App() {
             className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm bg-gray-700 hover:bg-gray-600 transition-colors">
             <Mic size={14} /> Voice
           </button>
+          <button onClick={() => setShowWalkthrough(true)}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs bg-blue-500/20 text-blue-400 border border-blue-500/30 hover:bg-blue-500/30 transition-colors">
+            <Play size={12} /> Demo
+          </button>
           <button onClick={() => setShowActivity(!showActivity)}
             className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm transition-colors ${showActivity ? 'bg-green-600' : 'bg-gray-700 hover:bg-gray-600'}`}>
             <Radio size={14} /> Activity
@@ -368,6 +374,10 @@ export default function App() {
       <div className="hidden md:block">
         <DesktopLayout />
       </div>
+
+      {showWalkthrough && (
+        <DemoWalkthrough onClose={() => setShowWalkthrough(false)} />
+      )}
 
       {showVoice && (
         <VoiceAssistant incidentContext={selected} onClose={() => setShowVoice(false)} />
