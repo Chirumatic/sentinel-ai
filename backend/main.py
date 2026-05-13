@@ -24,10 +24,10 @@ app.add_middleware(
 
 @app.on_event("startup")
 async def start_simulator():
-    from mock_data import INCIDENTS
+    from mock_data import INCIDENTS, LOGS
     from incident_simulator import run_simulator
     interval = int(os.getenv("SIMULATOR_INTERVAL", 45))
-    asyncio.create_task(run_simulator(INCIDENTS, interval_seconds=interval))
+    asyncio.create_task(run_simulator(INCIDENTS, LOGS, interval_seconds=interval))
 
 # --- Request Models ---
 
