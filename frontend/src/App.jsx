@@ -3,7 +3,8 @@ import { getIncidents, getIncident } from './api/client'
 import IncidentList from './components/IncidentList'
 import IncidentDetail from './components/IncidentDetail'
 import ChatAssistant from './components/ChatAssistant'
-import { Shield, RefreshCw, MessageSquare, X } from 'lucide-react'
+import { SeverityPieChart, StatusBarChart, SourceBarChart } from './components/Charts'
+import { Shield, RefreshCw, MessageSquare, X, LayoutDashboard, BarChart2 } from 'lucide-react'
 
 export default function App() {
   const [incidents, setIncidents] = useState([])
@@ -12,6 +13,7 @@ export default function App() {
   const [loading, setLoading] = useState(true)
   const [showChat, setShowChat] = useState(false)
   const [filter, setFilter] = useState('all')
+  const [view, setView] = useState('incidents') // 'incidents' | 'charts'
 
   const fetchIncidents = async () => {
     setLoading(true)
@@ -73,6 +75,20 @@ export default function App() {
           >
             <RefreshCw size={15} className={loading ? 'animate-spin' : ''} />
           </button>
+          <div className="flex bg-gray-800 rounded-lg p-0.5">
+            <button
+              onClick={() => setView('incidents')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs transition-colors ${view === 'incidents' ? 'bg-gray-600 text-white' : 'text-gray-400 hover:text-white'}`}
+            >
+              <LayoutDashboard size={13} /> Incidents
+            </button>
+            <button
+              onClick={() => setView('charts')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs transition-colors ${view === 'charts' ? 'bg-gray-600 text-white' : 'text-gray-400 hover:text-white'}`}
+            >
+              <BarChart2 size={13} /> Charts
+            </button>
+          </div>
           <button
             onClick={() => setShowChat(!showChat)}
             className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm transition-colors ${
@@ -135,9 +151,18 @@ export default function App() {
           </div>
         </div>
 
-        {/* Incident Detail */}
+        {/* Incident Detail / Charts */}
         <div className="flex-1 overflow-y-auto p-6">
-          {selected ? (
+          {view === 'charts' ? (
+            <div>
+              <h2 className="text-base font-semibold text-white mb-4">Incident Analytics</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                <SeverityPieChart incidents={incidents} />
+                <StatusBarChart incidents={incidents} />
+                <SourceBarChart incidents={incidents} />
+              </div>
+            </div>
+          ) : selected ? (
             <IncidentDetail incident={selected} logs={selectedLogs} />
           ) : (
             <div className="h-full flex items-center justify-center text-center">
