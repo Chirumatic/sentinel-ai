@@ -8,11 +8,12 @@ import Heatmap from './components/Heatmap'
 import SearchFilter from './components/SearchFilter'
 import { useTheme } from './hooks/useTheme'
 import SplashScreen from './components/SplashScreen'
+import Settings from './components/Settings'
 import AuditLog from './components/AuditLog'
 import AlertToast from './components/AlertToast'
 import { useAutoRefresh } from './hooks/useAutoRefresh'
 import { useNotifications } from './hooks/useNotifications'
-import { Shield, RefreshCw, MessageSquare, X, LayoutDashboard, BarChart2, Mic, ClipboardList, ArrowLeft, Plus, Sun, Moon } from 'lucide-react'
+import { Shield, RefreshCw, MessageSquare, X, LayoutDashboard, BarChart2, Mic, ClipboardList, ArrowLeft, Plus, Sun, Moon, Settings as SettingsIcon } from 'lucide-react'
 import VoiceAssistant from './components/VoiceAssistant'
 import CreateIncident from './components/CreateIncident'
 
@@ -187,6 +188,9 @@ export default function App() {
         {mobilePanel === 'audit' && (
           <div className="p-4"><AuditLog /></div>
         )}
+        {mobilePanel === 'settings' && (
+          <div className="p-4"><Settings /></div>
+        )}
         {mobilePanel === 'chat' && (
           <div className="h-full">
             <ChatAssistant incidentContext={selected} />
@@ -201,6 +205,7 @@ export default function App() {
           { id: 'charts', icon: <BarChart2 size={18} />, label: 'Charts' },
           { id: 'audit', icon: <ClipboardList size={18} />, label: 'Audit' },
           { id: 'chat', icon: <MessageSquare size={18} />, label: 'Chat' },
+          { id: 'settings', icon: <SettingsIcon size={18} />, label: 'Settings' },
         ].map(tab => (
           <button key={tab.id} onClick={() => setMobilePanel(tab.id)}
             className={`flex-1 flex flex-col items-center py-3 gap-1 text-xs transition-colors ${
@@ -247,6 +252,7 @@ export default function App() {
               { id: 'incidents', icon: <LayoutDashboard size={13} />, label: 'Incidents' },
               { id: 'charts', icon: <BarChart2 size={13} />, label: 'Charts' },
               { id: 'audit', icon: <ClipboardList size={13} />, label: 'Audit Log' },
+              { id: 'settings', icon: <SettingsIcon size={13} />, label: 'Settings' },
             ].map(tab => (
               <button key={tab.id} onClick={() => setView(tab.id)}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs transition-colors ${view === tab.id ? 'bg-gray-600 text-white' : 'text-gray-400 hover:text-white'}`}>
@@ -295,6 +301,7 @@ export default function App() {
 
         <div className="flex-1 overflow-y-auto p-6">
           {view === 'audit' ? <AuditLog /> :
+           view === 'settings' ? <Settings /> :
            view === 'charts' ? (
             <div>
               <h2 className="text-base font-semibold text-white mb-4">Incident Analytics</h2>
