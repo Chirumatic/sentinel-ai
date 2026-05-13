@@ -237,12 +237,23 @@ export default function App() {
 
   // ── DESKTOP LAYOUT ─────────────────────────────────────────
   const DesktopLayout = () => (
-    <div className="min-h-screen bg-gray-950 text-white flex flex-col relative">
+    <div className="min-h-screen text-white flex flex-col relative overflow-hidden"
+      style={{ background: 'radial-gradient(ellipse at 70% 10%, #0d1f3c 0%, #050d1a 50%, #000000 100%)' }}
+    >
       {/* Dashboard background */}
       <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute top-0 right-0 w-[500px] h-[400px] bg-blue-600/5 rounded-full blur-[100px]" />
-        <div className="absolute bottom-0 left-0 w-[400px] h-[300px] bg-purple-600/4 rounded-full blur-[80px]" />
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(59,130,246,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(59,130,246,0.02)_1px,transparent_1px)] bg-[size:40px_40px]" />
+        {/* Glows */}
+        <div className="absolute top-0 right-0 w-[700px] h-[500px] bg-blue-600/8 rounded-full blur-[120px]" />
+        <div className="absolute bottom-0 left-0 w-[500px] h-[400px] bg-purple-600/6 rounded-full blur-[100px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[300px] bg-cyan-600/4 rounded-full blur-[80px]" />
+        {/* Grid */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(59,130,246,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(59,130,246,0.04)_1px,transparent_1px)] bg-[size:40px_40px]" />
+        {/* Floating particles */}
+        <div className="absolute top-[20%] right-[5%] w-1.5 h-1.5 bg-blue-400 rounded-full opacity-30 animate-float-1" />
+        <div className="absolute top-[50%] right-[15%] w-1 h-1 bg-cyan-400 rounded-full opacity-25 animate-float-2" />
+        <div className="absolute top-[70%] right-[8%] w-2 h-2 bg-blue-300 rounded-full opacity-20 animate-float-3" />
+        <div className="absolute top-[30%] left-[35%] w-1 h-1 bg-purple-400 rounded-full opacity-20 animate-float-1" />
+        <div className="absolute bottom-[15%] right-[30%] w-1.5 h-1.5 bg-cyan-300 rounded-full opacity-25 animate-float-2" />
       </div>
       <header className="bg-gray-900/80 backdrop-blur-sm border-b border-gray-800 px-6 py-3 flex items-center justify-between shrink-0 relative z-10">
         <div className="flex items-center gap-3">
@@ -347,9 +358,19 @@ export default function App() {
           ) : (
             <div className="h-full flex items-center justify-center text-center">
               <div>
-                <Shield size={48} className="mx-auto mb-4 text-gray-700" />
-                <p className="text-gray-500">Select an incident to investigate</p>
+                <div className="relative mx-auto mb-6 w-24 h-24">
+                  <div className="absolute inset-0 bg-blue-500/10 rounded-full animate-ping" style={{ animationDuration: '3s' }} />
+                  <div className="absolute inset-2 bg-blue-500/10 rounded-full animate-ping" style={{ animationDuration: '3s', animationDelay: '0.5s' }} />
+                  <div className="relative w-24 h-24 bg-gray-800/80 border border-gray-700 rounded-full flex items-center justify-center">
+                    <Shield size={36} className="text-gray-600" />
+                  </div>
+                </div>
+                <p className="text-gray-400 font-medium">Select an incident to investigate</p>
                 <p className="text-gray-600 text-sm mt-1">Sentinel AI will analyze it automatically</p>
+                <div className="mt-6 flex items-center justify-center gap-2 text-xs text-gray-700">
+                  <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                  Monitoring {incidents.length} incidents
+                </div>
               </div>
             </div>
           )}
